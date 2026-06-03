@@ -1,0 +1,6 @@
+name: mini-rpg
+version: 0.0.1
+main: com.serty.minirpg.MiniRpg
+api-version: 1.21
+author: serty
+description: A plugin!
