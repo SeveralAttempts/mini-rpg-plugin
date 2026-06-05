@@ -1,6 +1,7 @@
 package com.serty.minirpg.Listeners;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.serty.minirpg.Services.MiniRpgService;
 
+@Singleton
 public class PlayerJoinListener implements Listener {
     private final MiniRpgService miniRpgService;
 
