@@ -20,6 +20,8 @@ repositories {
 dependencies {
   compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
   paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
+  implementation("com.google.dagger:dagger:2.59.2")
+  annotationProcessor("com.google.dagger:dagger-compiler:2.59.2")
 }
 
 tasks.processResources {

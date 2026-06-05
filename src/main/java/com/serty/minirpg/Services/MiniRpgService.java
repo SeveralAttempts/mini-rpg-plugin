@@ -4,19 +4,31 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.serty.minirpg.Entities.MiniRpgUserData;
 
+@Singleton
 public class MiniRpgService {
-    public static ArrayList<MiniRpgUserData> usersData;
-    private static File pluginFolder;
+    public ArrayList<MiniRpgUserData> usersData;
+    private File pluginFolder;
 
-    public static void initialize(File dataFolder) {
-        JsonUserDataService.initializeUserData(dataFolder);
-        usersData = JsonUserDataService.readJsonConfig(dataFolder);
+    private final JsonUserDataService jsonUserDataService;
+
+    @Inject
+    public MiniRpgService(JsonUserDataService jsonUserDataService) {
+        super();
+        this.jsonUserDataService = jsonUserDataService;
+    }
+
+    public void initialize(File dataFolder) {
+        jsonUserDataService.initializeUserData(dataFolder);
+        usersData = jsonUserDataService.readJsonConfig(dataFolder);
         pluginFolder = dataFolder;
     }
 
-    public static boolean tryAddUser(String userName, double miningSpeed, double movementSpeed) {
+    public boolean tryAddUser(String userName, double miningSpeed, double movementSpeed) {
         var user = usersData.stream().filter(x -> x.userName.equals(userName)).findFirst();
 
         if (user.isEmpty())
@@ -29,7 +41,7 @@ public class MiniRpgService {
         return false;
     }
 
-    public static Optional<MiniRpgUserData> onBlockBreakNewLevel(String userName) {
+    public Optional<MiniRpgUserData> onBlockBreakNewLevel(String userName) {
         var userData = usersData.stream()
         .filter(x -> x.userName.equals(userName))
         .findFirst();
@@ -53,11 +65,11 @@ public class MiniRpgService {
         return Optional.empty();
     }
 
-    public static void updateUserDataFile() {
-        JsonUserDataService.writeJsonConfig(usersData, pluginFolder);
+    public void updateUserDataFile() {
+        jsonUserDataService.writeJsonConfig(usersData, pluginFolder);
     }
 
-    public static void recalcNewLevel(String userName, int newLevel) {
+    public void recalcNewLevel(String userName, int newLevel) {
         var userData = usersData.stream()
         .filter(x -> x.userName.equals(userName))
         .findFirst();
@@ -74,7 +86,7 @@ public class MiniRpgService {
         });
     }
 
-    public static int getLevel(String userName) {
+    public int getLevel(String userName) {
         return usersData.stream()
         .filter(x -> x.userName.equals(userName))
         .findFirst().get().currentLevel;
