@@ -26,5 +26,6 @@ public class PlayerJoinListener implements Listener {
         var blockBreakSpeed = event.getPlayer().getAttribute(Attribute.BLOCK_BREAK_SPEED);
         var movementSpeed = event.getPlayer().getAttribute(Attribute.MOVEMENT_SPEED);
         miniRpgService.tryAddUser(userName, blockBreakSpeed.getValue(), movementSpeed.getValue());
+        miniRpgService.updatePlayerStats(userName);
     }
 }

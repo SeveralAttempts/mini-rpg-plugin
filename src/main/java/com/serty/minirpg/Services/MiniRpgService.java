@@ -7,6 +7,9 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
+
 import com.serty.minirpg.Entities.MiniRpgUserData;
 
 @Singleton
@@ -60,7 +63,10 @@ public class MiniRpgService {
             }
         });
 
-        if (level != userData.get().currentLevel) return Optional.of(userData.get());
+        if (level != userData.get().currentLevel) {
+            updatePlayerStats(userName);
+            return Optional.of(userData.get());
+        }
 
         return Optional.empty();
     }
@@ -84,11 +90,27 @@ public class MiniRpgService {
             x.generalMiningSpeedValue *= 1 + 0.05 * levelDelta;
             x.generalMovementSpeedValue *= 1 + 0.02 * levelDelta;
         });
+
+        updatePlayerStats(userName);
     }
 
-    public int getLevel(String userName) {
-        return usersData.stream()
-        .filter(x -> x.userName.equals(userName))
-        .findFirst().get().currentLevel;
+    public String getLevel(String userName) {
+        var level = usersData.stream()
+            .filter(x -> x.userName.equals(userName))
+            .findFirst().get().currentLevel;
+        return "Your level is " + level;
+    }
+
+    public void updatePlayerStats(String username) {
+        var player = Bukkit.getPlayer(username);
+
+        if (player != null && player.isOnline()) {
+            var userData = usersData.stream().findFirst().filter(x -> x.userName.equals(username));
+
+            userData.ifPresent(x -> {
+                player.getAttribute(Attribute.BLOCK_BREAK_SPEED).setBaseValue(x.generalMiningSpeedValue);
+                player.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(x.generalMovementSpeedValue);
+            });
+        }
     }
 }

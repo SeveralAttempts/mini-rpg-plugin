@@ -4,3 +4,10 @@ main: com.serty.minirpg.MiniRpg
 api-version: 1.21
 author: serty
 description: A plugin!
+
+commands:
+  minirpg:
+    description: Main MiniRpg command
+    usage: | 
+      /minirpg changelevel <player> <level>
+      /minirpg getlevel

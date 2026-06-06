@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
+    id("com.gradleup.shadow") version "9.4.2"
 }
 
 group = "com.minirpg"
@@ -18,10 +19,21 @@ repositories {
 }
 
 dependencies {
-  compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
-  paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
+  compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+  paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.20.1")
   implementation("com.google.dagger:dagger:2.59.2")
   annotationProcessor("com.google.dagger:dagger-compiler:2.59.2")
+}
+
+tasks {
+    build {
+        dependsOn(shadowJar)
+    }
+
+    shadowJar {
+        archiveClassifier.set("")
+    }
 }
 
 tasks.processResources {

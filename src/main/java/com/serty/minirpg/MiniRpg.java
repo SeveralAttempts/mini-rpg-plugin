@@ -13,10 +13,9 @@ import com.serty.minirpg.injection.DaggerAppComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class MiniRpg extends JavaPlugin {
-    private final long expectedMinutes = 60L;
+    private final long expectedMinutes = 30L;
     private final long expectedSeconds = 60L;
     private final long defaultTicks = 20L;
     
@@ -51,27 +50,28 @@ public class MiniRpg extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player))
-        {
-            sender.sendMessage("The command is for players only...");
-            return false;
+        if (command.getName().equalsIgnoreCase("minirpg")) {
+
+            switch(args[0].toLowerCase())
+            {
+                case "getlevel":
+                    if (args.length != 1) break;
+                    sender.sendMessage(miniRpgService.getLevel(sender.getName()));
+                    break;
+                case "changelevel":
+                    if (args.length != 3) break;
+                    miniRpgService.usersData.stream()
+                        .filter(x -> x.userName.equals(args[1]))
+                        .findFirst()
+                        .ifPresent(x -> {
+                            miniRpgService.recalcNewLevel(x.userName, Integer.parseInt(args[2]));
+                            miniRpgService.updateUserDataFile();
+                        });
+                    break;
+            }
+            
         }
-
-        if (command.getName().equalsIgnoreCase("minirpg")
-                && args.length == 3 && args[0].equals("changelevel"))
-        {
-            miniRpgService.usersData.stream()
-            .filter(x -> x.userName.equals(args[1]))
-            .findFirst()
-            .ifPresent(x -> {
-                miniRpgService.recalcNewLevel(x.userName, Integer.parseInt(args[2]));
-                miniRpgService.updateUserDataFile();
-            });
-
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     private void registerListeners() {
