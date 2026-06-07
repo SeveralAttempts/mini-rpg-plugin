@@ -23,9 +23,7 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         var userName = event.getPlayer().getName();
-        var blockBreakSpeed = event.getPlayer().getAttribute(Attribute.BLOCK_BREAK_SPEED);
-        var movementSpeed = event.getPlayer().getAttribute(Attribute.MOVEMENT_SPEED);
-        miniRpgService.tryAddUser(userName, blockBreakSpeed.getValue(), movementSpeed.getValue());
+        miniRpgService.tryAddUser(userName);
         miniRpgService.updatePlayerStats(userName);
     }
 }

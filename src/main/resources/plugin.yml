@@ -11,3 +11,6 @@ commands:
     usage: | 
       /minirpg changelevel <player> <level>
       /minirpg getlevel
+      /minirpg getblocks
+      /minirpg mystats
+      /minirpg reset

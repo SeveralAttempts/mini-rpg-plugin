@@ -3,6 +3,7 @@ package com.serty.minirpg;
 import javax.inject.Inject;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.serty.minirpg.Listeners.PlayerBlockBreakListener;
@@ -50,13 +51,14 @@ public class MiniRpg extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("minirpg")) {
+        var username = sender.getName();
 
+        if (command.getName().equalsIgnoreCase("minirpg")) {
             switch(args[0].toLowerCase())
             {
                 case "getlevel":
                     if (args.length != 1) break;
-                    sender.sendMessage(miniRpgService.getLevel(sender.getName()));
+                    sender.sendMessage(miniRpgService.getLevel(username));
                     break;
                 case "changelevel":
                     if (args.length != 3) break;
@@ -68,12 +70,24 @@ public class MiniRpg extends JavaPlugin {
                             miniRpgService.updateUserDataFile();
                         });
                     break;
+                case "getblocks":
+                    var blocksToNextLevel = miniRpgService.getBlocksCountForNextLevel(username);
+                    sender.sendMessage(blocksToNextLevel);
+                    break;
+                case "mystats":
+                    var stats = miniRpgService.getStats(username);
+                    sender.sendMessage(stats);
+                    break;
+                case "reset":
+                    miniRpgService.resetPlayerStats(username);
+                    sender.sendMessage("Done!");
+                    break;
             }
             
         }
         return true;
     }
-
+    
     private void registerListeners() {
 
         var pm = getServer().getPluginManager();
